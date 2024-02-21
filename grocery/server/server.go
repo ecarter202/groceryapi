@@ -109,8 +109,12 @@ func (ctx *Context) RateLimit(rw web.ResponseWriter, req *web.Request, next web.
 	var (
 		rps      float64
 		hash     string
-		clientIP = req.RemoteAddr[:strings.LastIndex(req.RemoteAddr, ":")]
+		clientIP string
 	)
+
+	if len(req.RemoteAddr) > 0 {
+		clientIP = req.RemoteAddr[:strings.LastIndex(req.RemoteAddr, ":")]
+	}
 
 	if xff := req.Header.Get("X-Forwarded-For"); xff != "" {
 		hash = shared.HashSha1(fmt.Sprintf("%s_%s", clientIP, xff))

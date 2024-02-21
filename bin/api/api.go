@@ -45,6 +45,8 @@ func (api *GroceryAPI) Status(rw web.ResponseWriter, req *web.Request) {
 }
 
 func (api *GroceryAPI) Search(rw web.ResponseWriter, req *web.Request) {
+	log.Print("searching products")
+
 	if keyword := req.URL.Query().Get("keyword"); keyword != "" {
 		products := database.DB.Search(keyword)
 		api.Respond(rw, http.StatusOK, _successfulMsg, products)
@@ -72,12 +74,18 @@ func (api *GroceryAPI) Create(rw web.ResponseWriter, req *web.Request) {
 	err := json.NewDecoder(req.Body).Decode(&products)
 	if err != nil {
 		api.Respond(rw, http.StatusBadRequest, "invalid product data")
+		return
+	}
+	if len(products) == 0 {
+		api.Respond(rw, http.StatusNoContent, "no product data supplied")
+		return
 	}
 
 	createdProducts, errs := database.DB.Put(products...)
 	if len(errs) > 0 {
 		api.Respond(rw, http.StatusInternalServerError, "unable to create product", errs)
 		log.Print("error creating products [ERR: ]", errs)
+		return
 	}
 
 	api.Respond(rw, http.StatusOK, _successfulMsg, createdProducts)

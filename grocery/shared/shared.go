@@ -66,6 +66,7 @@ func GenProductCode() (c string) {
 }
 
 func IsAlphaNum(s string) bool {
+	s = strings.ReplaceAll(s, " ", "")
 	return _alphaNum.MatchString(s)
 }
 

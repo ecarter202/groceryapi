@@ -11,7 +11,16 @@ import (
 	"grocery/shared"
 )
 
-var DB *Database
+var (
+	DB *Database
+
+	DummyData = []*models.Product{
+		{"A12T-4GH7-QPL9-3N4M", "Lettuce", 3.46},
+		{"E5T6-9UI3-TH15-QR88", "Peach", 2.99},
+		{"YRT6-72AS-K736-L4AR", "Green Pepper", 0.79},
+		{"TQ4C-VV6T-75ZX-1RMR", "Gala Apple", 3.59},
+	}
+)
 
 type (
 	Database struct {
@@ -105,8 +114,5 @@ func loadDummyData(d *Database) {
 		log.Print("dummy data loaded")
 	}()
 
-	d.Items = append(d.Items, &models.Product{"A12T-4GH7-QPL9-3N4M", "Lettuce", 3.46})
-	d.Items = append(d.Items, &models.Product{"E5T6-9UI3-TH15-QR88", "Peach", 2.99})
-	d.Items = append(d.Items, &models.Product{"YRT6-72AS-K736-L4AR", "Green Pepper", 0.79})
-	d.Items = append(d.Items, &models.Product{"TQ4C-VV6T-75ZX-1RMR", "Gala Apple", 3.59})
+	d.Items = append(d.Items, DummyData...)
 }
